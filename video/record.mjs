@@ -139,7 +139,7 @@ function createDirector(page, rec) {
       ms = Math.max(160, Math.min(ms, 250 + dist * 1.1));
       const bend = Math.min(60, dist * 0.08);
       const real = ms * SLOWMO;
-      const anim = demo(([a, b, c, e, f, g]) => __demo.animateCursor(a, b, c, e, f, g), [sx, sy, x, y, real, bend]);
+      const anim = demo(([a, b, c, e, f, g]) => __demo.animateCursor(a, b, c, e, f, g), [sx, sy, x, y, ms, bend]);
       const nx = -(y - sy) / (dist || 1), ny = (x - sx) / (dist || 1);
       const t0 = Date.now();
       for (;;) {
@@ -199,11 +199,11 @@ function createDirector(page, rec) {
           const sy = scrollY, ty = Math.max(0, Math.min(document.documentElement.scrollHeight - innerHeight, y));
           const e = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
           const t0 = performance.now();
-          const f = (t) => { const k = Math.min(1, (t - t0) / ms); scrollTo(0, sy + (ty - sy) * e(k)); k < 1 ? requestAnimationFrame(f) : res(); };
+          const f = () => { const k = Math.min(1, (performance.now() - t0) / ms); scrollTo(0, sy + (ty - sy) * e(k)); k < 1 ? requestAnimationFrame(f) : res(); };
           requestAnimationFrame(f);
         }), [y, ms * SLOWMO]);
       } else {
-        await demo(([y, ms]) => __demo.smoothScroll(y, ms), [y, ms * SLOWMO]);
+        await demo(([y, ms]) => __demo.smoothScroll(y, ms), [y, ms]);
       }
     },
     // 要素の上端が画面上 top px の位置に来るようにスクロール
@@ -514,6 +514,7 @@ function writeSidecars(log, duration) {
 
 // ---------------------------------------------------------------- main
 const app = await startApp();
+fs.rmSync(OUT_DIR, { recursive: true, force: true }); // 失敗時に古い出力が残らないように
 fs.mkdirSync(OUT_DIR, { recursive: true });
 // deviceScaleFactor のエミュレーションではスクリーンキャストが CSS ピクセル解像度になるため、
 // 起動フラグで実スケールを指定して 1920x1080 で取り込む

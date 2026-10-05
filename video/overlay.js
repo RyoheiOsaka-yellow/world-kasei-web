@@ -96,6 +96,8 @@
 
   let timeScale = 1; // 録画時のスローモーション倍率（CSSアニメと setTimeout の同期用）
   const later = (fn, ms) => setTimeout(fn, ms * timeScale);
+  // 演出用の時計（完成動画の時間）。rAF のタイムスタンプは再生速度の変更に影響されるため使わない
+  const clock = () => performance.now() / timeScale;
   let root, dimSvg, holes, telop, telopLabel, telopPips, telopBody, card, cursorEl;
   const highlights = [];
   let selectBox = null;
@@ -241,9 +243,9 @@
       const nx = -(y - sy) / dist, ny = (x - sx) / dist;
       const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
       return new Promise((res) => {
-        const t0 = performance.now();
-        const f = (t) => {
-          const k = Math.min(1, (t - t0) / ms);
+        const t0 = clock();
+        const f = () => {
+          const k = Math.min(1, (clock() - t0) / ms);
           const e = ease(k), arc = Math.sin(Math.PI * e) * bend;
           api.cursor(sx + (x - sx) * e + nx * arc, sy + (y - sy) * e + ny * arc);
           k < 1 ? requestAnimationFrame(f) : res();
@@ -298,9 +300,9 @@
       const ty = Math.max(0, Math.min(max, y));
       const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
       return new Promise((res) => {
-        const t0 = performance.now();
-        const f = (t) => {
-          const k = Math.min(1, (t - t0) / ms);
+        const t0 = clock();
+        const f = () => {
+          const k = Math.min(1, (clock() - t0) / ms);
           window.scrollTo(0, sy + (ty - sy) * ease(k));
           k < 1 ? requestAnimationFrame(f) : res();
         };
