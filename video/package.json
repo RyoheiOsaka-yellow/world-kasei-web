@@ -1,0 +1,14 @@
+{
+  "name": "wintec-pos-prototype-video",
+  "private": true,
+  "type": "module",
+  "description": "WINTEC POS サイトプロトタイプの説明動画を自動収録するスクリプト",
+  "scripts": {
+    "record": "node record.mjs",
+    "encode": "bash encode.sh",
+    "video": "node record.mjs && bash encode.sh"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<title>stage</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 100vw; height: 100vh; overflow: hidden; font-family: 'Noto Sans JP', sans-serif; color: #fff;
+    background: radial-gradient(1000px 600px at 80% 10%, rgba(0,123,255,.30), transparent 60%),
+                radial-gradient(800px 500px at 0% 100%, rgba(245,166,35,.12), transparent 60%),
+                linear-gradient(135deg, #003366, #001a33 70%); }
+  body::before { content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(0,123,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,123,255,.08) 1px, transparent 1px);
+    background-size: 48px 48px; }
+  .wrap { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; gap: 110px; }
+  .phone { position: relative; width: 399px; height: 760px; padding: 12px; border-radius: 52px; background: #0b1220;
+    box-shadow: 0 0 0 2px #2b3a55, 0 40px 80px rgba(0,0,0,.5), inset 0 0 0 2px #1c2740; }
+  .phone::after { content: ''; position: absolute; top: 22px; left: 50%; width: 92px; height: 26px; margin-left: -46px;
+    background: #0b1220; border-radius: 14px; z-index: 2; }
+  .screen { width: 375px; height: 736px; border-radius: 40px; overflow: hidden; background: #002244; }
+  .status { height: 46px; display: flex; align-items: center; justify-content: space-between; padding: 6px 30px 0 34px;
+    font-size: 15px; font-weight: 700; color: #fff; }
+  .status .icons { display: flex; gap: 6px; align-items: center; }
+  iframe { width: 375px; height: 690px; border: 0; display: block; background: #fff; }
+  .panel { width: 560px; }
+  .kicker { font-size: 15px; letter-spacing: .3em; color: #F5A623; font-weight: 700; }
+  h1 { font-size: 46px; font-weight: 700; margin-top: 14px; letter-spacing: .04em; }
+  .lead { font-size: 19px; color: #bcd3ee; margin-top: 14px; line-height: 1.8; }
+  ol { list-style: none; padding: 0; margin-top: 40px; display: grid; gap: 16px; }
+  li { display: flex; align-items: center; gap: 18px; padding: 18px 22px; border-radius: 14px; font-size: 21px; font-weight: 700;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.10); color: rgba(255,255,255,.45); transition: all .4s ease; }
+  li .n { flex: none; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 17px; background: rgba(255,255,255,.12); transition: all .4s ease; }
+  li.now { background: rgba(245,166,35,.14); border-color: rgba(245,166,35,.65); color: #fff; transform: translateX(8px); }
+  li.now .n { background: #F5A623; }
+  li.done { color: rgba(255,255,255,.75); }
+  li.done .n { background: rgba(245,166,35,.45); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="phone"><div class="screen">
+      <div class="status"><span>9:41</span><span class="icons">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#fff"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#fff"/><rect x="10" y="3" width="3" height="9" rx="1" fill="#fff"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#fff"/></svg>
+        <svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="#fff" opacity=".6"/><rect x="2.5" y="2.5" width="17" height="7" rx="1.5" fill="#fff"/><rect x="24" y="4" width="1.6" height="4" rx=".8" fill="#fff" opacity=".6"/></svg>
+      </span></div>
+      <iframe id="app"></iframe></div></div>
+    <div class="panel">
+      <div class="kicker">06 ｜ RESPONSIVE</div>
+      <h1>スマートフォン表示</h1>
+      <p class="lead">画面幅に合わせてレイアウトが自動で切り替わります。<br>スマホではメニューをボタンから開きます。</p>
+      <ol id="steps">
+        <li><span class="n">1</span>右上のメニューボタンをタップ</li>
+        <li><span class="n">2</span>見たいページをタップ</li>
+        <li><span class="n">3</span>縦スクロールで閲覧</li>
+      </ol>
+    </div>
+  </div>
+<script>
+  const params = new URLSearchParams(location.search);
+  document.getElementById('app').src = params.get('src') || '/#/';
+  window.__stage = {
+    step(i) {
+      document.querySelectorAll('#steps li').forEach((li, k) => {
+        li.classList.toggle('now', k === i);
+        li.classList.toggle('done', k < i);
+      });
+    },
+  };
+</script>
+</body>
+</html>
