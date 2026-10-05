@@ -130,7 +130,7 @@ function createDirector(page, rec) {
       for (const t of list) handles.push(await t.elementHandle());
       await demo(([hs, o]) => __demo.highlight(hs.length === 1 ? hs[0] : hs, o), [handles, opts]);
     },
-    async unhl(wait = 300) { await demo(() => __demo.clearHighlights()); await wait(wait); },
+    async unhl(ms = 300) { await demo(() => __demo.clearHighlights()); await wait(ms); },
 
     // カーソル移動：見た目はページ内アニメで滑らかに、実マウスは時間に合わせて追従させホバー効果を出す
     async moveTo(x, y, ms = 700) {
